@@ -4,9 +4,9 @@ include_once '../../libs/SQL.php';
 include_once '../../libs/MySQL.php';
 include_once '../../config.php';
 
-class Users
+class Rooms
 {
-    public function getUsers($params)
+    public function getRooms($params)
     {
         if ($params)
         {
@@ -24,7 +24,7 @@ class Users
         try
         {
             $mysql = new MySQL();
-            $mysql->setSql("SELECT id, username, password, email, fullname, is_admin, is_active FROM booker_users");
+            $mysql->setSql("SELECT id, name FROM booker_rooms");
             $result = $mysql->select();
         }catch(Exception $e)
         {
@@ -34,7 +34,7 @@ class Users
     }
 
 
-    public function postUsers()
+    public function postRooms()
     {
         //$username = $_POST['register-username'];
         //$password = $_POST['register-password'];
@@ -43,7 +43,7 @@ class Users
             //try
             //{
                 //$mysql = new MySQL();
-                //$mysql->setSql('INSERT INTO Users(id, username, password) VALUE(?, ?, ?)');
+                //$mysql->setSql('INSERT INTO Rooms(id, username, password) VALUE(?, ?, ?)');
                 //$result = $mysql->insert([0, $username, $password]);
             //}
             //catch (Exception $e)
@@ -59,7 +59,7 @@ class Users
         //return json_encode(['status' => 'success']);
     }
 
-    public function putUsers()
+    public function putRooms()
     {
         //if (!isset($_SERVER['PHP_AUTH_USER']))
         //{
@@ -79,7 +79,7 @@ class Users
         //}
     }
 
-    public function deleteUsers()
+    public function deleteRooms()
     {
         //if (isset($_SERVER['PHP_AUTH_USER']))
         //{
@@ -99,5 +99,5 @@ class Users
     }
 }
 
-$Users = new Users();
-$server = new RestServer($Users);
+$rooms = new Rooms();
+$server = new RestServer($rooms);
