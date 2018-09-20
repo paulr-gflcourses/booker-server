@@ -1,0 +1,25 @@
+<Limit GET POST PUT DELETE>
+    Allow from all
+</Limit>
+
+RewriteEngine On
+# Options FollowSymLinks
+# RewriteBase /~user12/REST/Server/api/cars/
+RewriteBase /my/courses/REST/Server/api/cars/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php
+
+
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     # RewriteBase /rest/server/api/cars
+#     # If the requested filename exists, simply serve it.
+#     # We only want to let Apache serve files and not directories.
+#     RewriteCond %{REQUEST_FILENAME} -f
+#     RewriteCond %{REQUEST_FILENAME} -d
+#     RewriteRule .? - [L]
+
+#     # Rewrite all other queries to the controller.
+#     RewriteRule .? index.php [L]
+# </IfModule>
