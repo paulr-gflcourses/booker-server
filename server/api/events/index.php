@@ -16,15 +16,16 @@ class Events
                 return $this->getById($id);
             }
         }
-
-        if (isset($_GET['filter']))
+        $sql = "SELECT id, idrec, description, start_time, end_time, created_time, idroom, iduser FROM booker_events";
+        if (isset($_GET['idroom']))
         {
-            return $this->CarFilter($_GET['filter']);
+           $sql.= " WHERE idroom=".$_GET['idroom'];
         }
+        
         try
         {
             $mysql = new MySQL();
-            $mysql->setSql("SELECT id, idrec, description, start_time, end_time, created_time, idroom, iduser FROM booker_events");
+            $mysql->setSql($sql);
             $result = $mysql->select();
         }catch(Exception $e)
         {
