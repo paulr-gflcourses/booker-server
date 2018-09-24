@@ -20,10 +20,10 @@ class RestServer
     {
         $this->service = $service;
         $url = $_SERVER['REQUEST_URI'];
-        list($b, $c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 9);
-        $params = explode('/', $url, 9);
-        //list( $c, $s, $a, $d, $db, $table, $path) = explode('/', $url, 7);
-        //$params = explode('/', $url, 7);
+        //list($b, $c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 9);
+        //$params = explode('/', $url, 9);
+        list( $c, $s, $a, $d, $db, $table, $path) = explode('/', $url, 7);
+        $params = explode('/', $url, 7);
 
         $method = $_SERVER['REQUEST_METHOD'];
         $funcName = ucfirst($table);
@@ -35,6 +35,9 @@ class RestServer
 
         $result = '';
         $viewType = '.json';
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
         switch ($method) {
         case 'GET':
             $viewType = array_pop($funcParams);
@@ -68,7 +71,8 @@ class RestServer
 
     private function show_results($result, $viewType = 'json')
     {
-        header('Access-Control-Allow-Origin: *');
+        //header('Access-Control-Allow-Origin: *');
+        //header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
         switch ($viewType) {
         case '.json':
             header('Content-Type: application/json');

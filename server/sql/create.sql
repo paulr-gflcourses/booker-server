@@ -23,7 +23,7 @@ CREATE TABLE booker_rooms (
 
 CREATE TABLE booker_events (
     id INT(12) NOT NULL AUTO_INCREMENT,
-    is_recurrent BOOLEAN,
+    is_recurring BOOLEAN,
 	idrec INT(12) NULL,
     description VARCHAR(200) NOT NULL,
     start_time TIMESTAMP NOT NULL,

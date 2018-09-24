@@ -17,7 +17,7 @@ INSERT INTO booker_users (id, username, password, email, fullname, is_admin, is_
 (2, 'user1', '123', 'user1@localhost', 'Andrew Mirret', false, true),
 (3, 'user2', '123', 'user2@localhost', 'Peter West', false, true);
 
-INSERT INTO booker_events (id, is_recurrent, idrec, description, start_time, end_time, idroom, iduser) VALUES
+INSERT INTO booker_events (id, is_recurring, idrec, description, start_time, end_time, idroom, iduser) VALUES
 (0, false, 1, 'Expired event','2018-09-10 14:00:00', '2018-09-10 14:30:00', 1, 2),
 (0, false, 2, 'The first event','2018-09-22 10:00:00', '2018-09-22 11:30:00', 1, 2),
 (0, false, 3, 'The second event','2018-09-22 11:30:00', '2018-09-22 13:00:00', 1, 2),
