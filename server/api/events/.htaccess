@@ -4,8 +4,8 @@
 
 
 RewriteEngine On
-# RewriteBase /~user12/booker-server/server/api/events/
-RewriteBase /my/courses/booker-server/server/api/events/
+ RewriteBase /~user12/booker-server/server/api/events/
+#RewriteBase /my/courses/booker-server/server/api/events/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php
