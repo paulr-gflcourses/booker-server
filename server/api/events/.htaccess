@@ -1,11 +1,16 @@
 <Limit GET POST PUT DELETE>
     Allow from all
 </Limit>
+# Header set Access-Control-Allow-Origin "*"
 
+# Header always set Access-Control-Allow-Origin "*"
+# Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
+# Header always set Access-Control-Max-Age "1000"
+# Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
 
 RewriteEngine On
- RewriteBase /~user12/booker-server/server/api/events/
-#RewriteBase /my/courses/booker-server/server/api/events/
+#  RewriteBase /~user12/booker-server/server/api/events/
+RewriteBase /my/courses/booker-server/server/api/events/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php
