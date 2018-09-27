@@ -1,10 +1,11 @@
 <Limit GET POST PUT DELETE>
     Allow from all
 </Limit>
-
+# Header set Access-Control-Allow-Origin "*"
 
 RewriteEngine On
- RewriteBase /~user12/booker-server/server/api/users/
+ #RewriteBase /~user12/booker-server/server/api/users/
+ RewriteBase /~paul/booker/booker-server/server/api/users/
 #RewriteBase /my/courses/booker-server/server/api/users/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

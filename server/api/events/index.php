@@ -3,67 +3,41 @@ include_once "../../libs/RestServer.php";
 include_once "../../libs/SQL.php";
 include_once "../../libs/MySQL.php";
 include_once "../../config.php";
+include_once "../../libs/models/EventsModel.php";
+
 class Events
 {
+    private $model;
 
-    public function getEvents($params=false)
+    public function __construct()
     {
-        if ($params)
-        {
-            $id = $params[0];
-            if (is_numeric($id))
-            {
-                return $this->getById($id);
-            }
-        }
-        $sql = "SELECT id, is_recurring, idrec, description, start_time, end_time, created_time, idroom, iduser FROM booker_events";
-        if (isset($_GET['idroom']))
-        {
-            $sql.= " WHERE idroom=".$_GET['idroom'];
-        }
-
-        try
-        {
-            $mysql = new MySQL();
-            $mysql->setSql($sql);
-            $result = $mysql->select();
-        }catch(Exception $e)
-        {
-            throw new Exception($e->getMessage());
-        }
-        return $result->fetchAll(PDO::FETCH_OBJ);
+        $this->model = new EventsModel();
     }
 
-    public function postEvents()
+    public function getEvents($pathParams, $queryParams)
     {
-        //$mysql = new MySQL();
-        //$mysql->setSql('INSERT INTO Events(id, username, password) VALUE(?, ?, ?)');
-        //$params=[];
-        //$result = $mysql->insert($params);
-        return json_encode(['post: '=>json_encode($_POST)]);
+        $result = $this->model->getEvents($pathParams, $queryParams);
+        return $result;
+    }
+
+    public function postEvents($pathParams, $queryParams)
+    {
+        $result = $this->model->insertEvents($pathParams, $queryParams);
+        return $result;
+    }
+
+    public function putEvents($pathParams, $queryParams)
+    {
+        $result = $this->model->updateEvents($pathParams, $queryParams);
+        return $result;
 
     }
 
-    public function putEvents($id)
+    public function deleteEvents($pathParams, $queryParams)
     {
-        //$mysql = new MySQL();
-        //$mysql->setSql('UPDATE Events SET description=? WHERE id=?');
-        //$params=[];
-        //$result = $mysql->update($params);
-        $put = "";
-        parse_str(file_get_contents("php://input"), $put);
-        //$event = json_decode($put);
-        return json_encode(['status'=>'ok','id'=>$id, 'postdata'=>$put, 'putid'=>$put['id']]);
-
+        $result = $this->model->deleteEvents($pathParams, $queryParams);
+        return $result;
     }
-
-    public function deleteEvents($id)
-    {
-
-    }
-
-
-
 
 
 }
