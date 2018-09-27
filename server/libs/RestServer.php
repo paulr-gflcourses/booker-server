@@ -20,12 +20,14 @@ class RestServer
     {
         $this->service = $service;
         $url = $_SERVER['REQUEST_URI'];
+
         //list($b, $c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 9);
         //$params = explode('/', $url, 9);
         list($c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 8);
         $params = explode('/', $url, 8);
          //list( $c, $s, $a, $d, $db, $table, $path) = explode('/', $url, 7);
          //$params = explode('/', $url, 7);
+
 
         $method = $_SERVER['REQUEST_METHOD'];
         $funcName = ucfirst($table);
@@ -36,18 +38,27 @@ class RestServer
         //  print_r($pathParams);
 
         $result = '';
+
       
         // header('Access-Control-Allow-Origin: *');
         // header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
         // header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 
+
         // header('Access-Control-Allow-Origin: *');
         // header('Access-Control-Allow-Methods: POST,GET,PUT,DELETE');
         // header('Access-Control-Allow-Headers: Authorization, Lang');
 
+
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
         header('Access-Control-Allow-Headers: Authorization, Content-Type');
+
+        // header('Access-Control-Allow-Origin: *');
+        // header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+        // header('Access-Control-Max-Age: 1000');
+        // header('Access-Control-Allow-Headers: *');
+
         
         switch ($method) {
         case 'GET':
