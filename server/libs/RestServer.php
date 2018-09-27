@@ -12,6 +12,7 @@ class RestServer
         }
         catch (Exception $e)
         {
+            http_response_code(500);
             echo json_encode(['errors' => $e->getMessage()]);
         }
     }
@@ -50,14 +51,14 @@ class RestServer
         // header('Access-Control-Allow-Headers: Authorization, Lang');
 
 
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
-        header('Access-Control-Allow-Headers: Authorization, Content-Type');
+        //header('Access-Control-Allow-Origin: *');
+        //header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+        //header('Access-Control-Allow-Headers: Authorization, Content-Type');
 
-        // header('Access-Control-Allow-Origin: *');
-        // header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-        // header('Access-Control-Max-Age: 1000');
-        // header('Access-Control-Allow-Headers: *');
+         header('Access-Control-Allow-Origin: *');
+         header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+         header('Access-Control-Max-Age: 1000');
+         header('Access-Control-Allow-Headers: *');
 
         
         switch ($method) {

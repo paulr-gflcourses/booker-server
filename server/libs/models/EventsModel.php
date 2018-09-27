@@ -29,29 +29,53 @@ class EventsModel
         }
         return $result->fetchAll(PDO::FETCH_OBJ);
     }
-    public function insertEvents($pathParams, $queryParams)
+
+    public function insertEvents($pathParams, $post)
     {
+        $id=0;
+        $is_recurring = ($post['is_recurring'] == true)? 1:0;
+        $idrec = $this->getNewIdRec();
+        $period = $post['period'];
+        $duration_recurring = $post['duration_recurring'];
+        $description = $post['description'];
+        $date = $post['date'];
+        $start_time = $date.' '.$post['start_time'];
+        $end_time = $date.' '.$post['end_time'];
+        $idroom = $post['idroom'];
+        $iduser = $post['iduser'];
+    
         $mysql = new MySQL();
         $sql = "INSERT INTO booker_events 
         (id, is_recurring, idrec, description, start_time, end_time, idroom, iduser) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $mysql->setSql($sql);
-        $sqlParams=[0, 0, 1, 'inserted event','2018-09-27 14:00:00', '2018-09-27 14:30:00', 1, 2];
-        $result = $mysql->insert($sqlParams);
-        return $queryParams;
+        $sqlParams=[$id, $is_recurring, $idrec, $description, $start_time, $end_time, $idroom, $iduser];
+
+        $tmp = [$id, $is_recurring, $idrec, $period, $duration_recurring, $description, $date, $start_time, $end_time, $idroom, $iduser];
+        //$result = $mysql->insert($sqlParams);
+        return $result;
     }
 
-    public function updateEvents($pathParams, $queryParams)
+    public function updateEvents($pathParams, $put)
     {
         $id=$pathParams[0];
+        $is_recurring = ($put['is_recurring'] == true)? 1:0;
+        $idrec = $put['idrec'];
+        $description = $put['description'];
+        $start_time = $put['start_time'];
+        $end_time = strtotime($put['end_time']);
+        $idroom = $put['idroom'];
+        $iduser = $put['iduser'];
         $mysql = new MySQL();
         $sql = "UPDATE booker_events SET 
-        is_recurring=?, idrec=?, description=?, start_time=?, end_time=?, idroom=?, iduser=? 
+        is_recurring=?, description=?, start_time=?, end_time=?, iduser=? 
         WHERE id=?";
         $mysql->setSql($sql);
-        $sqlParams=[0, 1, 'updated event','2018-09-27 18:00:00', '2018-09-27 18:30:00', 1, 2, $id];
+        //$sqlParams=[0, 1, 'updated event','2018-09-27 18:00:00', '2018-09-27 18:30:00', 1, 2, $id];
+        $sqlParams = [$is_recurring, $description, $start_time, $end_time, $iduser, $id];
         $result = $mysql->update($sqlParams);
-        return $queryParams;
+        $tmp = [$id, $is_recurring, $idrec, $description, $start_time, $end_time, $idroom, $iduser];
+        return $sqlParams;
 
     }
 
@@ -64,6 +88,11 @@ class EventsModel
         $sqlParams=[$id];
         $result = $mysql->update($sqlParams);
         return $queryParams;
+    }
+    
+    private function getNewIdRec()
+    {
+        return strtotime("now");
     }
     
 }
