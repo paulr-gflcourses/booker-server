@@ -22,10 +22,10 @@ class RestServer
         $this->service = $service;
         $url = $_SERVER['REQUEST_URI'];
 
-        list($b, $c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 9);
-        $params = explode('/', $url, 9);
-        // list($c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 8);
-        // $params = explode('/', $url, 8);
+        //list($b, $c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 9);
+        //$params = explode('/', $url, 9);
+         list($c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 8);
+         $params = explode('/', $url, 8);
 
 
 

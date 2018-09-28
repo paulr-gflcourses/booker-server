@@ -37,13 +37,21 @@ class EventsModel
         $period = $post['period'];
         $duration_recurring = $post['duration_recurring'];
         $description = $post['description'];
+        $idroom = $post['idroom'];
+        $iduser = $post['iduser'];
+
         $date = $post['date'];
         date_default_timezone_set('UTC');
         $start_time =  date('Y-m-d H:i', +$post['start_time']);
         $end_time =  date('Y-m-d H:i', +$post['end_time']);
-        $idroom = $post['idroom'];
-        $iduser = $post['iduser'];
+        //$tmp = [$id, $is_recurring, $idrec, $period, $duration_recurring, $description, $date, $start_time, $end_time, $idroom, $iduser];
+        //return $this->insertSingleEvent($is_recurring, $idrec, $description, $start_time, $end_time, $idroom, $iduser);
+        return $post['days'];
     
+    }
+    public function insertSingleEvent($is_recurring, $idrec, $description, $start_time, $end_time, $idroom, $iduser)
+    {
+        $id=0;
         $mysql = new MySQL();
         $sql = "INSERT INTO booker_events 
         (id, is_recurring, idrec, description, start_time, end_time, idroom, iduser) 
@@ -51,9 +59,9 @@ class EventsModel
         $mysql->setSql($sql);
         $sqlParams=[$id, $is_recurring, $idrec, $description, $start_time, $end_time, $idroom, $iduser];
 
-        $tmp = [$id, $is_recurring, $idrec, $period, $duration_recurring, $description, $date, $start_time, $end_time, $idroom, $iduser];
         $result = $mysql->insert($sqlParams);
         return $result;
+
     }
 
     public function updateEvents($pathParams, $put)
