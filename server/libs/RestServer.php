@@ -22,12 +22,11 @@ class RestServer
         $this->service = $service;
         $url = $_SERVER['REQUEST_URI'];
 
-        //list($b, $c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 9);
-        //$params = explode('/', $url, 9);
-        list($c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 8);
-        $params = explode('/', $url, 8);
-         //list( $c, $s, $a, $d, $db, $table, $path) = explode('/', $url, 7);
-         //$params = explode('/', $url, 7);
+        list($b, $c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 9);
+        $params = explode('/', $url, 9);
+        // list($c, $s, $a, $d, $e, $db, $table, $path) = explode('/', $url, 8);
+        // $params = explode('/', $url, 8);
+
 
 
         $method = $_SERVER['REQUEST_METHOD'];
@@ -66,7 +65,8 @@ class RestServer
             $result = $this->setMethod('get' . $funcName, $pathParams, $_GET);
             break;
         case 'POST':
-            $queryParams =json_decode(file_get_contents("php://input"), true);
+            $contents = file_get_contents("php://input");
+            $queryParams =json_decode($contents, true);
             $result = $this->setMethod('post' . $funcName, $pathParams, $queryParams);
             break;
         case 'PUT':
