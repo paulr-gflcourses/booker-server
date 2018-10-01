@@ -3,7 +3,6 @@ include_once '../../libs/RestServer.php';
 include_once '../../libs/SQL.php';
 include_once '../../libs/MySQL.php';
 include_once '../../config.php';
-
 class Users
 {
     public function getUsers($params)
@@ -16,7 +15,6 @@ class Users
                 return $this->getById($id);
             }
         }
-
         if (isset($_GET['filter']))
         {
             return $this->CarFilter($_GET['filter']);
@@ -32,8 +30,6 @@ class Users
         }
         return $result->fetchAll(PDO::FETCH_OBJ);
     }
-
-
     public function postUsers()
     {
         //$username = $_POST['register-username'];
@@ -55,10 +51,8 @@ class Users
         //{
             //throw new Exception('The username is alreary exist!');
         //}
-
         //return json_encode(['status' => 'success']);
     }
-
     public function putUsers()
     {
         //if (!isset($_SERVER['PHP_AUTH_USER']))
@@ -78,13 +72,11 @@ class Users
             //}
         //}
     }
-
     public function deleteUsers()
     {
         //if (isset($_SERVER['PHP_AUTH_USER']))
         //{
             //unset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_SERVER['AUTH_TYPE'], $_SERVER['REMOTE_USER']);
-
             //// header('WWW-Authenticate: Basic realm="My Realm"');
             //header('HTTP/1.0 401 Unauthorized');
             //// exit;
@@ -92,12 +84,10 @@ class Users
         //echo json_encode(['logout' => 'success']);
         //exit;
     //}
-
     //private function isUserExist($username, $password)
     //{
         //return true;
     }
 }
-
 $Users = new Users();
 $server = new RestServer($Users);
