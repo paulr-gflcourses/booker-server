@@ -215,7 +215,8 @@ class EventsModel
         $mysql = new MySQL();
         $mysql->setSql($sql);
         $result = $mysql->delete($sqlParams);
-        return $result;
+        //return $result;
+        return $del;
     }
 
     private function getNewIdRec()
