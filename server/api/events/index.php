@@ -4,6 +4,7 @@ include_once '../../libs/SQL.php';
 include_once '../../libs/MySQL.php';
 include_once '../../config.php';
 include_once '../../libs/models/EventsModel.php';
+
 /**
  * Performs perations with events
  */

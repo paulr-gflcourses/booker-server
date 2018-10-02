@@ -37,6 +37,7 @@ class EventsModel
         $id = 0;
 
         $this->validateEmpty($post,['idroom','iduser','description','is_recurring','date','start_time','end_time']);
+        $this->validateNumber($post,['start_time','end_time']);
         $idroom = $post['idroom'];
         $iduser = $post['iduser'];
         $description = $post['description'];
@@ -45,17 +46,18 @@ class EventsModel
         if ($is_recurring)
         {
             $this->validateEmpty($post,['period','duration_recurring']);
+            $this->validateNumber($post,['duration_recurring']);
+            $period = $post['period'];
+            $duration_recurring = $post['duration_recurring'];
         }
         $idrec = $this->getNewIdRec();
-        $period = $post['period'];
-        $duration_recurring = $post['duration_recurring'];
+
+
 
         $date = $post['date'];
         date_default_timezone_set('UTC');
         $start_time = date('Y-m-d H:i', +$post['start_time']);
         $end_time = date('Y-m-d H:i', +$post['end_time']);
-
-        
 
         if ($is_recurring)
         {
@@ -83,13 +85,31 @@ class EventsModel
         return false;
     }
 
+    /**
+     * Validates if the parameters are empty
+     */
     private function validateEmpty($array, $names)
     {
         foreach($names as $name)
         {
             if (!(isset($array[$name]) && $array[$name])){
                 http_response_code(400);
-                throw new Exception('Some fields are empty!');
+                throw new Exception('Field '.$name.' is empty!');
+            }
+        }
+
+    }
+
+    /**
+     * Validates if the parameters are numeric
+     */
+    private function validateNumber($array, $names)
+    {
+        foreach($names as $name)
+        {
+            if (!(isset($array[$name]) && $array[$name])){
+                http_response_code(400);
+                throw new Exception('Field '.$name.' is not numeric!');
             }
         }
 
@@ -102,7 +122,15 @@ class EventsModel
         $dates = [[$start_time, $end_time]];
         $n = +$duration;
         $periods = ['weekly' =>['week',1], 'bi-weekly' => ['week',2], 'monthly' => ['week',4]];
+        $limits = ['weekly' =>['week',4], 'bi-weekly' => ['week',3], 'monthly' => ['week',1]];
+
         $timeMeasure = $periods[$period][0];
+        if ($n > $limits[$period][1])
+        {
+            http_response_code(400);
+            throw new Exception('Date limit exceeded');
+        }
+
         $nPeriods = $periods[$period][1];
         for ($i = 0; $i < $n; $i++)
         {
@@ -187,6 +215,9 @@ class EventsModel
     public function updateEvents($pathParams, $put)
     {
         $id = $pathParams[0];
+
+        $this->validateEmpty($put, ['description', 'start_time','end_time','iduser']);
+
         $is_recurring = ($put['is_recurring'] == 'true') ? 1 : 0;
         $applyToAllRec = ($put['applyToAllRec'] == 'true') ? 1 : 0;
         $idrec = $put['idrec'];

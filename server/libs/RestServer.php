@@ -1,9 +1,14 @@
 <?php
-
+/*
+ * Provides a REST architechture to the server application
+ */
 class RestServer
 {
     private $service;
-
+    /**
+     * Constructor for the RestServer
+     *  Throws an Exception if there is any error with an appropriate message
+     */
     public function __construct($service)
     {
         try
@@ -16,6 +21,10 @@ class RestServer
         }
     }
 
+    /**
+     * Defines a class and method to be invoked
+     * Forms input path- and query-parameters for the method
+     */
     private function parseMethod($service)
     {
         $this->service = $service;
@@ -59,6 +68,9 @@ class RestServer
         $this->show_results($result);
     }
 
+    /**
+     * Invokes a method by name with given parameters
+     */
     private function setMethod($funcName, $pathParams = false, $queryParams = false)
     {
         $ret = false;
@@ -69,6 +81,9 @@ class RestServer
         return $ret;
     }
 
+    /**
+     * Shows result of  the method in json
+     */
     private function show_results($result)
     {
         header('Content-Type: application/json');

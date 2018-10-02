@@ -4,6 +4,7 @@ include_once '../../libs/SQL.php';
 include_once '../../libs/MySQL.php';
 include_once '../../config.php';
 include_once '../../libs/models/UsersModel.php';
+
 /**
  * Performs operations with users
  */
@@ -39,7 +40,14 @@ class Users
      */
     public function putUsers($pathParams, $queryParams)
     {
-        $result = $this->model->updateUser($pathParams, $queryParams);
+        if (isset($queryParams['username']))
+        {
+            $result = $this->model->login($queryParams);    
+        }
+        else
+        {
+            $result = $this->model->updateUser($pathParams, $queryParams);
+        }
         return $result;
     }
 
