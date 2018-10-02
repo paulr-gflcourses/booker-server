@@ -6,7 +6,7 @@
 RewriteEngine On
 RewriteBase /~user12/booker/booker-server/server/api/users/
  #RewriteBase /~paul/booker/booker-server/server/api/users/
-#RewriteBase /my/courses/booker/booker-server/server/api/users/
+# RewriteBase /my/courses/booker/booker-server/server/api/users/
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

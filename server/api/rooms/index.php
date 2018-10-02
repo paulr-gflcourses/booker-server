@@ -3,9 +3,14 @@ include_once '../../libs/RestServer.php';
 include_once '../../libs/SQL.php';
 include_once '../../libs/MySQL.php';
 include_once '../../config.php';
-
+/**
+ * Performs operations with rooms
+ */
 class Rooms
 {
+    /**
+     * Gets aviable rooms
+     */
     public function getRooms($params)
     {
         if ($params)
@@ -32,22 +37,7 @@ class Rooms
         }
         return $result->fetchAll(PDO::FETCH_OBJ);
     }
-
-
-    public function postRooms()
-    {
-        
-    }
-
-    public function putRooms()
-    {
-
-    }
-
-    public function deleteRooms()
-    {
-
-    }
+  
 }
 
 $rooms = new Rooms();

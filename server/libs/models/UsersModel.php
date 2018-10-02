@@ -68,11 +68,9 @@ class UsersModel
         try
         {
             $mysql = new MySQL();
-            $mysql->setSql("DELETE FROM booker_users WHERE id=?");
-            $result = $mysql->delete([$id]);
             $mysql->setSql("UPDATE booker_users SET is_active=0"
                 ." WHERE id=?");
-            $result = $mysql->update([$fullname, $email, $username, $password, $is_admin, $id]);
+            $result = $mysql->update([$id]);
             return $result;
         }
         catch (Exception $e)

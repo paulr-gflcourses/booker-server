@@ -1,6 +1,14 @@
 <?php
+
+/** 
+ * Manipulates with events data
+ */
 class EventsModel
 {
+
+    /**
+     * Gets all events from the database
+     */
     public function getEvents($pathParams, $queryParams)
     {
         $sql = 'SELECT id, is_recurring, idrec, description, start_time, end_time, created_time, idroom, iduser FROM booker_events';
@@ -21,14 +29,23 @@ class EventsModel
         return $result->fetchAll(PDO::FETCH_OBJ);
     }
 
+    /**
+     * Inserts one or multiple events to the database
+     */
     public function insertEvents($pathParams, $post)
     {
         $id = 0;
+
+        $this->validateEmpty($post,['idroom','iduser','description','is_recurring','date','start_time','end_time']);
         $idroom = $post['idroom'];
         $iduser = $post['iduser'];
         $description = $post['description'];
 
         $is_recurring = ($post['is_recurring'] == 'true') ? 1 : 0;
+        if ($is_recurring)
+        {
+            $this->validateEmpty($post,['period','duration_recurring']);
+        }
         $idrec = $this->getNewIdRec();
         $period = $post['period'];
         $duration_recurring = $post['duration_recurring'];
@@ -37,6 +54,8 @@ class EventsModel
         date_default_timezone_set('UTC');
         $start_time = date('Y-m-d H:i', +$post['start_time']);
         $end_time = date('Y-m-d H:i', +$post['end_time']);
+
+        
 
         if ($is_recurring)
         {
@@ -47,6 +66,11 @@ class EventsModel
                 $rec_end_time = $rec_date[1];
                 $this->isActualDate($rec_start_time,$rec_end_time);
                 $this->isFreeRange($idroom,$rec_start_time,$rec_end_time);
+            }
+            foreach ($dates as $rec_date)
+            {
+                $rec_start_time = $rec_date[0];
+                $rec_end_time = $rec_date[1];
                 $this->insertSingleEvent($is_recurring, $idrec, $description, $rec_start_time, $rec_end_time, $idroom, $iduser);
             }
         }
@@ -54,11 +78,25 @@ class EventsModel
         {
             $this->isActualDate($start_time, $end_time);
             $this->isFreeRange($idroom, $start_time, $end_time);
-            return $this->insertSingleEvent($is_recurring, $idrec, $description, $start_time, $end_time, $idroom, $iduser);
+            $this->insertSingleEvent($is_recurring, $idrec, $description, $start_time, $end_time, $idroom, $iduser);
+        }
+        return false;
+    }
+
+    private function validateEmpty($array, $names)
+    {
+        foreach($names as $name)
+        {
+            if (!(isset($array[$name]) && $array[$name])){
+                http_response_code(400);
+                throw new Exception('Some fields are empty!');
+            }
         }
 
     }
-
+    /**
+     * Forms the dates to the recurring events
+     */
     private function createRecDates($start_time, $end_time, $period, $duration)
     {
         $dates = [[$start_time, $end_time]];
@@ -74,6 +112,10 @@ class EventsModel
         }
         return $dates;
     }
+
+    /**
+     * Checks if a date is actual
+     */
     private function isActualDate($start_time, $end_time)
     {
         date_default_timezone_set('UTC');
@@ -88,6 +130,9 @@ class EventsModel
         
     }
 
+    /**
+     * Checks if the time for a new event is not bisy
+     */
     private function isFreeRange($idroom, $start_time, $end_time, $current_id=false)
     {
         $sql = 'SELECT id, start_time, end_time, idroom, iduser FROM booker_events';
@@ -118,6 +163,10 @@ class EventsModel
         return true;
     }
 
+
+/**
+ * Inserts one single event to the database
+ */
     private function insertSingleEvent($is_recurring, $idrec, $description, $start_time, $end_time, $idroom, $iduser)
     {
         $id = 0;
@@ -131,6 +180,10 @@ class EventsModel
         return $result;
     }
 
+
+    /**
+     * Updates one or multiple events to the database
+     */
     public function updateEvents($pathParams, $put)
     {
         $id = $pathParams[0];
@@ -146,7 +199,6 @@ class EventsModel
 
         if ($is_recurring && $applyToAllRec)
         {
-            
             $rec_events = $this->getRecEvents($idrec);
             foreach ($rec_events as $event)
             {
@@ -179,6 +231,9 @@ class EventsModel
         return $sqlParams;
     }
 
+    /**
+     * Gets all events that are recurring for the given event
+     */
     private function getRecEvents($idrec)
     {
         $mysql = new MySQL();
@@ -189,36 +244,69 @@ class EventsModel
         return $result->fetchAll(PDO::FETCH_ASSOC);
 
     }
-    private function changeTime($srcTime, $changedTime)
+
+    /**
+     * Returns the combination of the given date and time
+     */
+    private function changeTime($srcDate, $srcTime)
     {
-        $time1 = strtotime($srcTime);
-        $time2 = strtotime($changedTime);
+        $time1 = strtotime($srcDate);
+        $time2 = strtotime($srcTime);
         $resDate = strtotime(date('Y-m-d', $time1).' '.date('H:i', $time2) );
         return date('Y-m-d H:i',$resDate);
 
     }
+
+    /**
+     * Deletes one or multiple events from the database
+     */
     public function deleteEvents($pathParams, $del)
     {
         $id = $pathParams[0];
         $is_recurring = ($del['is_recurring'] == 'true') ? 1 : 0;
         $applyToAllRec = ($del['applyToAllRec'] == 'true') ? 1 : 0;
         $idrec = $del['idrec'];
+        $description = $del['description'];
+        date_default_timezone_set('UTC');
+        $start_time = date('Y-m-d H:i', +$del['start_time']);
+        $end_time = date('Y-m-d H:i', +$del['end_time']);
+        $idroom = $del['idroom'];
+        $iduser = $del['iduser'];
         if ($is_recurring && $applyToAllRec)
         {
-            $sql = 'DELETE FROM booker_events WHERE idrec=?';
-            $sqlParams = [$idrec];
+            $this->isActualDate($start_time, $end_time);
+            $rec_events = $this->getRecEvents($idrec);
+            foreach ($rec_events as $event)
+            {
+                $id = $event['id'];
+                $start = $this->changeTime($event['start_time'], $start_time);
+                $end = $this->changeTime($event['end_time'], $end_time);
+
+                if (strtotime($start)>=strtotime($start_time))
+                {
+                    $mysql = new MySQL();
+                    $sql = 'DELETE FROM booker_events WHERE id=?';
+                    $mysql->setSql($sql);
+                    $sqlParams = [$id];
+                    $result = $mysql->delete($sqlParams);
+                }
+            }
         }else
         {
+            $this->isActualDate($start_time, $end_time);
             $sql = 'DELETE FROM booker_events WHERE id=?';
             $sqlParams = [$id];
+            $mysql = new MySQL();
+            $mysql->setSql($sql);
+            $result = $mysql->delete($sqlParams);
         }
-        $mysql = new MySQL();
-        $mysql->setSql($sql);
-        $result = $mysql->delete($sqlParams);
-        //return $result;
-        return $del;
+       
+        return false;
     }
 
+    /**
+     * Calculates a new recurring id for an event
+     */
     private function getNewIdRec()
     {
         return strtotime('now');
