@@ -40,13 +40,13 @@ class Users
      */
     public function putUsers($pathParams, $queryParams)
     {
-        if (isset($queryParams['username']))
+        if (isset($queryParams['id']))
         {
-            $result = $this->model->login($queryParams);    
+            $result = $this->model->updateUser($pathParams, $queryParams);
         }
         else
         {
-            $result = $this->model->updateUser($pathParams, $queryParams);
+            $result = $this->model->login($queryParams);    
         }
         return $result;
     }
